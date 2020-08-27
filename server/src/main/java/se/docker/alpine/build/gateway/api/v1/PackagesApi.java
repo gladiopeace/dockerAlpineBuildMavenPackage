@@ -40,7 +40,9 @@ public class PackagesApi
     @Produces(MediaType.APPLICATION_JSON)
     public Response packageId( @Context UriInfo uriInfo)
     {
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(1)).build();
+        int id = packagesService.createPackage();
+
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
         String path = uri.getPath();
         Response response = Response.created(uri).status(Response.Status.CREATED)
             .type(MediaType.APPLICATION_JSON).build();

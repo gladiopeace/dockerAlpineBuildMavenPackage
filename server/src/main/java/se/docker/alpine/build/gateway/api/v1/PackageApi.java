@@ -37,7 +37,8 @@ public class PackageApi
     @Consumes(MediaType.TEXT_PLAIN)
     public Response name(@PathParam("name") String name)
     {
-        PackageData packageData = packagesService.getPackageById(id);
+        PackageData packageData;
+        packageData = packagesService.getPackageById(id);
         if (packageData == null)
         {
             return Response.noContent().build();

@@ -20,11 +20,18 @@ public class MockPackagesService extends PackagesService
     @Override
     public int createPackage()
     {
-        return 0;
+        return 1;
     }
 
     @Override
     public PackageData getPackageById(String id)
+    {
+        packageData.setName("mypackage");
+        return packageData;
+    }
+
+    @Override
+    public PackageData getPackageById(Integer id)
     {
         packageData.setName("mypackage");
         return packageData;
