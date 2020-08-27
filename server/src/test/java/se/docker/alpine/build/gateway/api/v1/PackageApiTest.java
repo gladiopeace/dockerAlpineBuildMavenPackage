@@ -12,27 +12,39 @@ public class PackageApiTest
 {
 
     @Test
-    public void testHelloEndpoint()
+    public void testCollectionGetPackage()
     {
         given()
                 .when().get("/v1/packages")
                 .then()
                 .statusCode(200)
-                .body(is("Hello"));
+                .body(is("[1]"));
     }
 
     @Test
-    public void testPostPackage()
+    public void testCollectionPostPackage()
     {
+        
         given()
                 .when().post("/v1/packages")
                 .then()
                 .header("Location", "http://localhost:64102/v1/packages/1")
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
-    public void testPutNamePackage()
+    public void testMemberGetPackage()
+    {
+        given()
+                .when().get("/v1/packages/1")
+                .then()
+                .statusCode(200)
+                .body(is("{\"name\"" +
+                        ":\"mypackage\"}"));
+    }
+
+    @Test
+    public void testMemberPutNamePackage()
     {
         given()
                 .when().put("/v1/packages/1/name")
@@ -40,15 +52,5 @@ public class PackageApiTest
                 .statusCode(200);
     }
 
-
-    @Test
-    public void testGetPackage()
-    {
-        given()
-                .when().get("/v1/packages/1")
-                .then()
-                .statusCode(200)
-                .body(is("{\"name\":\"mypackage\"}"));
-    }
 
 }

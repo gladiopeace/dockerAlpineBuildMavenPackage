@@ -31,7 +31,7 @@ If you want to learn more about building native executables, please consult http
 
 # Test
 
-docker run -i --rm -p 8080:8080 quarkus/server-alpine-jvm
+docker run -i --rm -p 8080:8080 quarkus/server-alpine-jvm eller java -jar target/server-1.0-SNAPSHOT-runner.jar
 http://localhost:8080/v1/packages/1
 
 curl -w "\n" -X POST  http://localhost:8080/v1/packages

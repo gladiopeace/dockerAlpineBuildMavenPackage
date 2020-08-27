@@ -2,10 +2,7 @@ package se.docker.alpine.build.service;
 
 import se.docker.alpine.build.model.PackageData;
 
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.LinkedHashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -30,5 +27,11 @@ public class PackagesService
     public PackageData getPackageById(String id)
     {
         return packages.get(id);
+    }
+
+    public List<Integer>  getIds()
+    {
+       List<Integer> listKeys = new ArrayList<Integer>( packages.keySet() );
+       return listKeys;
     }
 }

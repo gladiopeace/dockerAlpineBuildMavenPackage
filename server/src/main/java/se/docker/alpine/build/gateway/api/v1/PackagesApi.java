@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.List;
 
 @Path("/v1/packages")
 public class PackagesApi
@@ -15,9 +16,13 @@ public class PackagesApi
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String hello()
+    public Response memberResources()
     {
-        return "Hello";
+        List<Integer> urls;
+        urls =  packagesService.getIds();
+        Response response = Response.status(Response.Status.OK)
+                .type(MediaType.APPLICATION_JSON).entity(urls).build();
+        return response;
     }
 
     /*
@@ -37,7 +42,7 @@ public class PackagesApi
     {
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(1)).build();
         String path = uri.getPath();
-        Response response = Response.created(uri).status(Response.Status.OK)
+        Response response = Response.created(uri).status(Response.Status.CREATED)
             .type(MediaType.APPLICATION_JSON).build();
         return response;
     }
