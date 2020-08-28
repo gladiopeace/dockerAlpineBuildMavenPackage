@@ -30,7 +30,8 @@ You can then execute your native executable with: `./target/server-1.0-SNAPSHOT-
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
 
 # Test
-
+https://en.wikipedia.org/wiki/Representational_state_transfer
+https://quarkus.io/guides/rest-json
 
 ./mvnw verify -Pnative -Dquarkus.native.container-build=true 
 
@@ -46,4 +47,5 @@ curl -v -w "\n" -X POST  http://localhost:8080/v1/packages
 curl -v -w "\n" -X PUT  -H "Content-Type: text/plain"  http://localhost:8080/v1/packages/1/name -d 'apa1' 
 
 curl -v -w "\n" -X GET -H "Content-Type: application/json"  http://localhost:8080/v1/packages/1 
+curl -v -w "\n" -X GET -H "Content-Type: application/json"  http://localhost:8080/v1/packages
 

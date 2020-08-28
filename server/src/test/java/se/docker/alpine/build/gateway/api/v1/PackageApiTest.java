@@ -32,7 +32,7 @@ public class PackageApiTest
                 .when().get("/v1/packages")
                 .then()
                 .statusCode(200)
-                .body(is("[1]"));
+                .body(is("[http://localhost:64102/v1/packages/1]"));
     }
 
 

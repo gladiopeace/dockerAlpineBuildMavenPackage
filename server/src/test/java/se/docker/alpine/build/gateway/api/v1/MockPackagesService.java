@@ -23,14 +23,12 @@ public class MockPackagesService extends PackagesService
     @Override
     public PackageData getPackageById(String id)
     {
-        //   packageData.setName("myPackage");
         return packageData;
     }
 
     @Override
     public PackageData getPackageById(Integer id)
     {
-        // packageData.setName("myPackage");
         return packageData;
     }
 

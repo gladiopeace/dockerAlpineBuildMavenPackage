@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v1/packages")
@@ -14,16 +15,7 @@ public class PackagesApi
     @Inject
     PackagesService packagesService;
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response memberResources()
-    {
-        List<Integer> urls;
-        urls =  packagesService.getIds();
-        Response response = Response.status(Response.Status.OK)
-                .type(MediaType.APPLICATION_JSON).entity(urls).build();
-        return response;
-    }
+
 
     /*
     @POST
@@ -38,14 +30,33 @@ public class PackagesApi
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response packageId( @Context UriInfo uriInfo)
+    public Response packageId(@Context UriInfo uriInfo)
     {
         int id = packagesService.createPackage();
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
         String path = uri.getPath();
         Response response = Response.created(uri).status(Response.Status.CREATED)
-            .type(MediaType.APPLICATION_JSON).build();
+                .type(MediaType.APPLICATION_JSON).build();
+        return response;
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response memberResources(@Context UriInfo uriInfo)
+    {
+        List<String> urls = new ArrayList<>();
+        List<Integer> ids;
+        ids = packagesService.getIds();
+
+        for (Integer id : ids)
+        {
+            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+            urls.add(uri.toString());
+        }
+
+        Response response = Response.status(Response.Status.OK)
+                .entity(urls).build();
         return response;
     }
 }
