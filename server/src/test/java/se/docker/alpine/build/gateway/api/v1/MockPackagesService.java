@@ -13,10 +13,7 @@ import java.util.List;
 public class MockPackagesService extends PackagesService
 {
     private PackageData packageData = new PackageData();
-   /* public MockPackagesService()
-    {
-        packageData.setName("mypackage");
-    }*/
+
     @Override
     public int createPackage()
     {
@@ -26,14 +23,14 @@ public class MockPackagesService extends PackagesService
     @Override
     public PackageData getPackageById(String id)
     {
-     //   packageData.setName("myPackage");
+        //   packageData.setName("myPackage");
         return packageData;
     }
 
     @Override
     public PackageData getPackageById(Integer id)
     {
-       // packageData.setName("myPackage");
+        // packageData.setName("myPackage");
         return packageData;
     }
 
