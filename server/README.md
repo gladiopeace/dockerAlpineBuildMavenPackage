@@ -31,6 +31,9 @@ If you want to learn more about building native executables, please consult http
 
 # Test
 
+
+./mvnw verify -Pnative -Dquarkus.native.container-build=true 
+
 docker run -i --rm -p 8080:8080 quarkus/server-alpine-jvm 
 eller 
 java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8881  target/server-1.0-SNAPSHOT-runner.jar

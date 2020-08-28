@@ -1,5 +1,6 @@
 package se.docker.alpine.build.gateway.api.v1;
 
+import org.jboss.resteasy.annotations.Body;
 import se.docker.alpine.build.model.PackageData;
 import se.docker.alpine.build.service.PackagesService;
 
@@ -35,19 +36,20 @@ public class PackageApi
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response name(@PathParam("name") String name)
+    public Response name(String body, @PathParam("name") String name)
     {
+        Response response;
         PackageData packageData;
         packageData = packagesService.getPackageById(id);
         if (packageData == null)
         {
-            return Response.noContent().build();
+            response=  Response.noContent().build();
         } else
         {
-            packageData.setName(name);
-            return Response.ok().build();
+            packageData.setName(body);
+            response = Response.ok().build();
         }
-
+        return response;
     }
 
 }
