@@ -20,7 +20,7 @@ public class PackagesService
 
     public long createPackage()
     {
-        long counter = index.incrementAndGet();
+        long counter = getCounter();
         PackageData packageData = new PackageData();
         packages.put(counter, packageData);
         return counter;
@@ -28,7 +28,7 @@ public class PackagesService
 
     public PackageData getPackageById(String id)
     {
-        return packages.get(Long.parseLong(id));
+        return packages.get(Long.valueOf(id));
     }
 
     public PackageData getPackageById(Long id)
@@ -39,5 +39,19 @@ public class PackagesService
     public List<Long> getIds()
     {
         return (new ArrayList<>(packages.keySet()));
+    }
+
+    synchronized private long getCounter()
+    {
+        long counter = index.incrementAndGet();
+        while (packages.containsKey(counter))
+        {
+            counter = index.incrementAndGet();
+            if (counter >= Long.MAX_VALUE)
+            {
+                this.index.set(0);
+            }
+        }
+        return counter;
     }
 }

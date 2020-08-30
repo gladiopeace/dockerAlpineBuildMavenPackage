@@ -22,6 +22,7 @@ public class PackageApi
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     public Response postPackageData(@Context UriInfo uriInfo)
     {
         Response response;
