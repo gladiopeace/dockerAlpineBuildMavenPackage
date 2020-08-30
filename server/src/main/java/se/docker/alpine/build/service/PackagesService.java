@@ -3,6 +3,7 @@ package se.docker.alpine.build.service;
 import se.docker.alpine.build.model.PackageData;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,8 +13,8 @@ import javax.transaction.Transactional;
 @ApplicationScoped
 public class PackagesService
 {
-    private final Hashtable<Integer, PackageData> packages
-            = new Hashtable<>();
+    private final ConcurrentHashMap<Integer, PackageData> packages
+            = new ConcurrentHashMap<>();
 
     private final AtomicInteger index = new AtomicInteger();
 
