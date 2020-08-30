@@ -5,12 +5,17 @@ import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.matchesPattern;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import org.junit.jupiter.api.Nested;
 
 
 @DisplayName("Restful tests")
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Tag("unittest")
 public class PackageApiTest
 {
     public static final String MY_PACKAGE = "myPackage";
@@ -54,9 +59,22 @@ public class PackageApiTest
                 .statusCode(200);
     }
 
-    @DisplayName("Retrieve representation of the member resource in the response body")
+    @DisplayName("Replaces all the representations of the member resource or create the member resource if it does not exist, with the representation in the request body.")
     @Test
     @Order(11)
+    public void testMemberGetNamePackage()
+    {
+        given()
+                .when()
+                .get("/v1/packages/1/name")
+                .then()
+                .body(is(MY_PACKAGE))
+                .statusCode(200);
+    }
+
+    @DisplayName("Retrieves a representation of the member resource in the response body")
+    @Test
+    @Order(12)
     public void testMemberGetPackage()
     {
         given()
@@ -66,4 +84,32 @@ public class PackageApiTest
                 .body(is("{\"name\"" +
                         ":\"" + MY_PACKAGE + "\"}"));
     }
+
+    @DisplayName("Replace all the representations of the member resources of the collection resource with the representation in the request body, or create the collection resource if it does not exist.")
+    @Test
+    @Order(30)
+    public void testCollectionPutPackage()
+    {
+        given()
+                .when().put("/v1/packages/1")
+                .then()
+                .header("Location", matchesPattern("http://localhost:[0-9]+/v1/packages/1"))
+                .statusCode(201);
+    }
+
+    @DisplayName("Retrieves a representation of the member resource in the response body")
+    @Test
+    @Order(31)
+    public void testMemberGetNameEmptyPackage()
+    {
+        given()
+                .when()
+                .get("/v1/packages/1/name")
+                .then()
+                .body(is(""))
+                .statusCode(200);
+    }
+
+
+
 }
