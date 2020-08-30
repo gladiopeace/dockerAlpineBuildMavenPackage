@@ -15,7 +15,7 @@ public class PackagesService
     private final Hashtable<Integer, PackageData> packages
             = new Hashtable<>();
 
-    private AtomicInteger index = new AtomicInteger();
+    private final AtomicInteger index = new AtomicInteger();
 
     public int createPackage()
     {
@@ -27,19 +27,16 @@ public class PackagesService
 
     public PackageData getPackageById(String id)
     {
-        PackageData packageData = packages.get(Integer.parseInt(id));
-        return packageData;
+        return packages.get(Integer.parseInt(id));
     }
 
     public PackageData getPackageById(Integer id)
     {
-        PackageData packageData = packages.get(id);
-        return packageData;
+        return packages.get(id);
     }
 
     public List<Integer> getIds()
     {
-        List<Integer> listKeys = new ArrayList<Integer>(packages.keySet());
-        return listKeys;
+        return (new ArrayList<>(packages.keySet()));
     }
 }

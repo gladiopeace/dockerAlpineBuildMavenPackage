@@ -15,19 +15,7 @@ public class PackagesApi
     @Inject
     PackagesService packagesService;
 
-
-
-    /*
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    public int packageId( @Context UriInfo uriInfo)
-    {
-        int id = packagesService.createPackage();
-        return id;
-    }
-     */
-
-
+    @SuppressWarnings("QsUndeclaredPathMimeTypesInspection")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response packageId(@Context UriInfo uriInfo)
@@ -35,10 +23,9 @@ public class PackagesApi
         int id = packagesService.createPackage();
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
-        String path = uri.getPath();
-        Response response = Response.created(uri).status(Response.Status.CREATED)
-                .type(MediaType.APPLICATION_JSON).build();
-        return response;
+        return (Response.created(uri).status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON).build());
+
     }
 
     @GET
@@ -55,8 +42,8 @@ public class PackagesApi
             urls.add(uri.toString());
         }
 
-        Response response = Response.status(Response.Status.OK)
-                .entity(urls).build();
-        return response;
+        return (Response.status(Response.Status.OK)
+                .entity(urls).build());
+
     }
 }

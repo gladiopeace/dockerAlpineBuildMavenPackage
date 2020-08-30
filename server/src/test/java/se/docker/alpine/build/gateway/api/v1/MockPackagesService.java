@@ -6,38 +6,42 @@ import se.docker.alpine.build.service.PackagesService;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 @Mock
 @ApplicationScoped
 public class MockPackagesService extends PackagesService
 {
-    private PackageData packageData = new PackageData();
+    private final Hashtable<Integer, PackageData> packages
+            = new Hashtable<>();
+
+    private Integer index = 0;
 
     @Override
     public int createPackage()
     {
-        return 1;
+        final PackageData packageData = new PackageData();
+        packages.put(++index,packageData);
+        return index;
     }
 
     @Override
     public PackageData getPackageById(String id)
     {
-        return packageData;
+        return packages.get(Integer.parseInt(id));
     }
 
     @Override
     public PackageData getPackageById(Integer id)
     {
-        return packageData;
+        return packages.get(id);
     }
 
     @Override
     public List<Integer> getIds()
     {
-        List<Integer> listKeys = new ArrayList<>();
-        listKeys.add(1);
-        return listKeys;
+        return (new ArrayList<>(packages.keySet()));
     }
 
 }

@@ -1,6 +1,5 @@
 package se.docker.alpine.build.gateway.api.v1;
 
-import org.jboss.resteasy.annotations.Body;
 import se.docker.alpine.build.model.PackageData;
 import se.docker.alpine.build.service.PackagesService;
 
