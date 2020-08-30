@@ -20,7 +20,7 @@ public class PackagesApi
     @Produces(MediaType.APPLICATION_JSON)
     public Response packageId(@Context UriInfo uriInfo)
     {
-        int id = packagesService.createPackage();
+        long id = packagesService.createPackage();
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
         return (Response.created(uri).status(Response.Status.CREATED)
@@ -33,10 +33,10 @@ public class PackagesApi
     public Response memberResources(@Context UriInfo uriInfo)
     {
         List<String> urls = new ArrayList<>();
-        List<Integer> ids;
+        List<Long> ids;
         ids = packagesService.getIds();
 
-        for (Integer id : ids)
+        for (Long id : ids)
         {
             URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
             urls.add(uri.toString());

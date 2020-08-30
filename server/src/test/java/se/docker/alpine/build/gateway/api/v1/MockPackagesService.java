@@ -13,13 +13,13 @@ import java.util.List;
 @ApplicationScoped
 public class MockPackagesService extends PackagesService
 {
-    private final Hashtable<Integer, PackageData> packages
+    private final Hashtable<Long, PackageData> packages
             = new Hashtable<>();
 
-    private Integer index = 0;
+    private Long index = 0L;
 
     @Override
-    public int createPackage()
+    public long createPackage()
     {
         final PackageData packageData = new PackageData();
         packages.put(++index,packageData);
@@ -29,17 +29,17 @@ public class MockPackagesService extends PackagesService
     @Override
     public PackageData getPackageById(String id)
     {
-        return packages.get(Integer.parseInt(id));
+        return packages.get(Long.parseLong(id));
     }
 
     @Override
-    public PackageData getPackageById(Integer id)
+    public PackageData getPackageById(Long id)
     {
         return packages.get(id);
     }
 
     @Override
-    public List<Integer> getIds()
+    public List<Long> getIds()
     {
         return (new ArrayList<>(packages.keySet()));
     }

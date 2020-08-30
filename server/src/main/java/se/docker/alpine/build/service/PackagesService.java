@@ -4,7 +4,7 @@ import se.docker.alpine.build.model.PackageData;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
@@ -13,14 +13,14 @@ import javax.transaction.Transactional;
 @ApplicationScoped
 public class PackagesService
 {
-    private final ConcurrentHashMap<Integer, PackageData> packages
+    private final ConcurrentHashMap<Long, PackageData> packages
             = new ConcurrentHashMap<>();
 
-    private final AtomicInteger index = new AtomicInteger();
+    private final AtomicLong index = new AtomicLong();
 
-    public int createPackage()
+    public long createPackage()
     {
-        int counter = index.incrementAndGet();
+        long counter = index.incrementAndGet();
         PackageData packageData = new PackageData();
         packages.put(counter, packageData);
         return counter;
@@ -28,15 +28,15 @@ public class PackagesService
 
     public PackageData getPackageById(String id)
     {
-        return packages.get(Integer.parseInt(id));
+        return packages.get(Long.parseLong(id));
     }
 
-    public PackageData getPackageById(Integer id)
+    public PackageData getPackageById(Long id)
     {
         return packages.get(id);
     }
 
-    public List<Integer> getIds()
+    public List<Long> getIds()
     {
         return (new ArrayList<>(packages.keySet()));
     }
