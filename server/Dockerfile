@@ -25,6 +25,7 @@ FROM alpine:3.12.0
 
 ARG JAVA_PACKAGE=openjdk11-jre-headless
 ARG RUN_JAVA_VERSION=1.3.8
+ARG INSTALLATION_FOLDER=/usr/local/lib/alpine
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 

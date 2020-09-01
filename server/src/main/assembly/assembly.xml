@@ -4,7 +4,6 @@
         <dependencySet>
             <includes>
                 <include>*:jar</include>
-                <include>*:jar</include>
             </includes>
             <outputDirectory>.</outputDirectory>
         </dependencySet>

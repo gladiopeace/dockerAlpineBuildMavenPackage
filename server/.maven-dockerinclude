@@ -1,3 +1,0 @@
-target/*-runner.jar
-target/lib/**
-src/main/docker/scripts/*.sh

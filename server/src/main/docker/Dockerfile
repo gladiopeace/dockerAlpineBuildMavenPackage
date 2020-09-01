@@ -29,8 +29,6 @@ ARG INSTALLATION_FOLDER=/usr/local/lib/alpine
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
-
-
 # Install java and the run-java script
 # Also set up permissions for user `1001`
 RUN apk add openjdk11-jre-headless \
@@ -54,19 +52,11 @@ RUN apk add openjdk11-jre-headless \
     && chown 1001 ${INSTALLATION_FOLDER}/run-java.sh \
     && chmod 540 ${INSTALLATION_FOLDER}/run-java.sh
 
-
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-
 COPY target/lib/* ${INSTALLATION_FOLDER}/lib/
 COPY target/*-runner.jar ${INSTALLATION_FOLDER}/app.jar
-
-
 EXPOSE 8080
-
-#
-#USER 1001
-#USER dev
 
 #
 # Alpine settings
@@ -82,16 +72,12 @@ RUN mkdir -p /home/dev \
 RUN addgroup dev abuild
 
 RUN mkdir -p /var/cache/distfiles
-#RUN chmod a+w /var/cache/distfiles
 RUN chgrp abuild /var/cache/distfiles
 RUN chmod g+w /var/cache/distfiles
-# RUN mkdir /home/dev/aport
-# RUN ln -s /home/dev/aports /home/dev/aport
 
 RUN   mkdir -p ${INSTALLATION_FOLDER}/scripts
 COPY  src/main/docker/scripts/create_new_package.sh ${INSTALLATION_FOLDER}/scripts/
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        WORKDIR /home/dev
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    WORKDIR /home/dev
 # USER dev
 
 RUN git config --global user.name "dev"
