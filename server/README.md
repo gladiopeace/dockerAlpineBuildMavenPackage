@@ -32,6 +32,7 @@ If you want to learn more about building native executables, please consult http
 # Test
 https://en.wikipedia.org/wiki/Representational_state_transfer
 https://quarkus.io/guides/rest-json
+https://github.com/fabric8io/docker-maven-plugin/tree/master/samples
 
 ./mvnw verify -Pnative -Dquarkus.native.container-build=true 
 

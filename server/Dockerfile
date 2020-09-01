@@ -7,7 +7,7 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile --tag quarkus/server-alpine-jvm .
+# docker build -f Dockerfile --tag quarkus/server-alpine-jvm .
 #
 # Then run the container using:
 #
@@ -21,11 +21,10 @@
 # docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/server-alpine-jvm
 #
 ###
-FROM alpine:3.12.0 as build
+FROM alpine:3.12.0
 
 ARG JAVA_PACKAGE=openjdk11-jre-headless
 ARG RUN_JAVA_VERSION=1.3.8
-ARG INSTALLATION_FOLDER=/usr/local/lib/alpine
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
@@ -47,7 +46,7 @@ RUN apk add openjdk11-jre-headless \
     && apk add curl ca-certificates ${JAVA_PACKAGE} \
     && apk update \
     && mkdir -p ${INSTALLATION_FOLDER} \
-    && chown 1001 ${INSTALLATION_FOLDER}\
+    && chown 1001 ${INSTALLATION_FOLDER} \
     && chmod "g+rwX" ${INSTALLATION_FOLDER} \
     && chown 1001:root ${INSTALLATION_FOLDER} \
     && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o ${INSTALLATION_FOLDER}/run-java.sh \
@@ -58,8 +57,8 @@ RUN apk add openjdk11-jre-headless \
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 
-#COPY target/lib/* ${INSTALLATION_FOLDER}/lib/
-#COPY target/*-runner.jar ${INSTALLATION_FOLDER}/app.jar
+COPY target/lib/* ${INSTALLATION_FOLDER}/lib/
+COPY target/*-runner.jar ${INSTALLATION_FOLDER}/app.jar
 
 
 EXPOSE 8080
