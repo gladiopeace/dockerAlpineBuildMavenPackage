@@ -1,13 +1,14 @@
 ####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode.
+# Used of maven plugin fabric8io docker-maven-plugin (https://dmp.fabric8.io/)
 #
 # Before building the docker image run:
 #
-# mvn package
+# mvn clean package
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile --tag quarkus/server-alpine-jvm .
+# mvn -Pdocker install
 #
 # Then run the container using:
 #
@@ -26,6 +27,7 @@ FROM alpine:3.12.0
 ARG JAVA_PACKAGE=openjdk11-jre-headless
 ARG RUN_JAVA_VERSION=1.3.8
 ARG INSTALLATION_FOLDER=/usr/local/lib/alpine
+ENV INSTALLATION_FOLDER_ENV=${INSTALLATION_FOLDER}
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
@@ -54,8 +56,8 @@ RUN apk add openjdk11-jre-headless \
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-COPY target/lib/* ${INSTALLATION_FOLDER}/lib/
-COPY target/*-runner.jar ${INSTALLATION_FOLDER}/app.jar
+COPY maven/target/lib/* ${INSTALLATION_FOLDER}/lib/
+COPY maven/target/*-runner.jar ${INSTALLATION_FOLDER}/app.jar
 EXPOSE 8080
 
 #
@@ -76,7 +78,7 @@ RUN chgrp abuild /var/cache/distfiles
 RUN chmod g+w /var/cache/distfiles
 
 RUN   mkdir -p ${INSTALLATION_FOLDER}/scripts
-COPY  src/main/docker/scripts/create_new_package.sh ${INSTALLATION_FOLDER}/scripts/
+COPY  maven/src/main/docker/scripts/create_new_package.sh ${INSTALLATION_FOLDER}/scripts/
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     WORKDIR /home/dev
 # USER dev
 
