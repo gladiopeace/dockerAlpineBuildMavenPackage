@@ -29,10 +29,25 @@ You can then execute your native executable with: `./target/server-1.0-SNAPSHOT-
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
 
+# Start the docker container
+
+mvn -P docker docker:start
+
+# Stop the docker container
+
+mvn -P docker docker:stop
+
 # Test
+tree /home/ulha/code/dockerAlpineBuildMavenPackage/server/target/docker/quarkus/server-alpine-jvm/build/maven
+
+http://dmp.fabric8.io/#example
 https://en.wikipedia.org/wiki/Representational_state_transfer
 https://quarkus.io/guides/rest-json
 https://github.com/fabric8io/docker-maven-plugin/tree/master/samples
+
+docker exec -it  2b096e72c0bd   /bin/sh
+docker exec -it server-alpine-jvm-1   /bin/sh
+
 
 ./mvnw verify -Pnative -Dquarkus.native.container-build=true 
 

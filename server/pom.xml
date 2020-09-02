@@ -21,7 +21,6 @@
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
         <quarkus.http.test-port>0</quarkus.http.test-port> <!-- 0 means an free port -->
-       <INSTALLATION_FOLDER>/usr/local/lib/alpine</INSTALLATION_FOLDER>
     </properties>
 
     <dependencyManagement>
@@ -61,12 +60,17 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-jsonb</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
-            <version>4.5.6.Final</version>
         </dependency>
 
+    <!--    <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy</artifactId>
+        </dependency>
+        -->
 
     </dependencies>
 
@@ -176,6 +180,17 @@
                                             <descriptor>${project.basedir}/src/main/assembly/assembly.xml</descriptor>
                                         </assembly>
                                     </build>
+                                    <run>
+                                        <ports>
+                                            <port>8080:8080</port>
+                                        </ports>
+                                        <wait>
+                                            <http>
+                                                <url>http://localhost:8080/v1/packages</url>
+                                            </http>
+                                            <time>10000</time>
+                                        </wait>
+                                    </run>
                                 </image>
                             </images>
                         </configuration>

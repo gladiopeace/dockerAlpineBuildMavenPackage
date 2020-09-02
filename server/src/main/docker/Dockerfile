@@ -8,11 +8,14 @@
 #
 # Then, build the image with:
 #
-# mvn -Pdocker install
+# mvn -P docker install
 #
 # Then run the container using:
 #
 # docker run -i --rm -p 8080:8080 quarkus/server-alpine-jvm
+# or
+# mvn -P docker docker:start
+# ( mvn -P docker docker:stop )
 #
 # If you want to include the debug port into your docker image
 # you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5050
@@ -23,16 +26,14 @@
 #
 ###
 FROM alpine:3.12.0
+LABEL Description="This image is used to start a Restful serivice to create a Alpine package" Vendor="UH" Version="0.1"
 
 ARG JAVA_PACKAGE=openjdk11-jre-headless
 ARG RUN_JAVA_VERSION=1.3.8
-ARG INSTALLATION_FOLDER=/usr/local/lib/alpine
-ENV INSTALLATION_FOLDER_ENV=${INSTALLATION_FOLDER}
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
 # Install java and the run-java script
-# Also set up permissions for user `1001`
 RUN apk add openjdk11-jre-headless \
     && apk update \
     && apk add curl \
@@ -45,50 +46,50 @@ RUN apk add openjdk11-jre-headless \
     && apk --update add ttf-ubuntu-font-family \
     && apk update \
     && apk add curl ca-certificates ${JAVA_PACKAGE} \
-    && apk update \
-    && mkdir -p ${INSTALLATION_FOLDER} \
-    && chown 1001 ${INSTALLATION_FOLDER}\
-    && chmod "g+rwX" ${INSTALLATION_FOLDER} \
-    && chown 1001:root ${INSTALLATION_FOLDER} \
-    && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o ${INSTALLATION_FOLDER}/run-java.sh \
-    && chown 1001 ${INSTALLATION_FOLDER}/run-java.sh \
-    && chmod 540 ${INSTALLATION_FOLDER}/run-java.sh
+    && apk update
 
-# Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-COPY maven/target/lib/* ${INSTALLATION_FOLDER}/lib/
-COPY maven/target/*-runner.jar ${INSTALLATION_FOLDER}/app.jar
-EXPOSE 8080
-
-#
-# Alpine settings
-#
-
-# Update file /etc/abuild.conf
-RUN sed -i -e 's/#PACKAGER="Your Name <your@email.address>"/PACKAGER="dev <dev@email.address>"/g'  /etc/abuild.conf
-
+# Create user dev
 RUN mkdir -p /home/dev \
-    && adduser -D dev \
+    && adduser --disabled-password dev \
     && chown -R dev:dev /home/dev
 
+#  Add the user dev to group abuild
 RUN addgroup dev abuild
+
+# Runner
+RUN mkdir -p /usr/local/lib/alpine \
+    && chown dev /usr/local/lib/alpine\
+    && chmod "g+rwX" /usr/local/lib/alpine \
+    && chown dev:root /usr/local/lib/alpine \
+    && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o /usr/local/lib/alpine/run-java.sh \
+    && chown dev /usr/local/lib/alpine/run-java.sh \
+    && chmod 540 /usr/local/lib/alpine/run-java.sh
+
+## Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+COPY maven/target/lib/* /usr/local/lib/alpine/lib/
+COPY maven/target/*-runner.jar /usr/local/lib/alpine/app.jar
+EXPOSE 8080
+
+
+# Alpine package scripts
+
+RUN sed -i -e 's/#PACKAGER="Your Name <your@email.address>"/PACKAGER="dev <dev@email.address>"/g'  /etc/abuild.conf
 
 RUN mkdir -p /var/cache/distfiles
 RUN chgrp abuild /var/cache/distfiles
 RUN chmod g+w /var/cache/distfiles
 
-RUN   mkdir -p ${INSTALLATION_FOLDER}/scripts
-COPY  maven/src/main/docker/scripts/create_new_package.sh ${INSTALLATION_FOLDER}/scripts/
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    WORKDIR /home/dev
-# USER dev
+RUN mkdir -p /usr/local/lib/alpine/scripts
+COPY maven/src/main/docker/scripts/create_new_package.sh /usr/local/lib/alpine/scripts/
 
-RUN git config --global user.name "dev"
-RUN git config --global user.email "dev@email.address"
-RUN git clone git://git.alpinelinux.org/aports
-# RUN abuild-keygen -n
-RUN abuild-keygen -a -i
+COPY maven/src/main/docker/aports /home/dev/aports
+RUN chgrp -R -v abuild /home/dev/aports
 
-USER 1001
+# Set user                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     WORKDIR /home/dev
+USER dev
+WORKDIR /home/dev
 
+RUN abuild-keygen -n
 
-ENTRYPOINT [ "${INSTALLATION_FOLDER}/run-java.sh" ]
+ENTRYPOINT [ "/usr/local/lib/alpine/run-java.sh" ]

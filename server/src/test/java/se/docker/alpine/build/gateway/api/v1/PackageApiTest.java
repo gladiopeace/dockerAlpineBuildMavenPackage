@@ -1,6 +1,7 @@
 package se.docker.alpine.build.gateway.api.v1;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
@@ -11,6 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Nested;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.util.Base64;
+
 
 @DisplayName("Restful tests")
 @QuarkusTest
@@ -19,6 +25,7 @@ import org.junit.jupiter.api.Nested;
 public class PackageApiTest
 {
     public static final String MY_PACKAGE = "myPackage";
+    public static final String MY_PACKAGE_BASE64 = "bXlQYWNrYWdl";
 
     @DisplayName("Creates a member resource in the collection resource. " +
             "The URI of the created member resource is automatically assigned and returned " +
@@ -47,9 +54,26 @@ public class PackageApiTest
     }
 
 
-    @DisplayName("Replaces all the representations of the member resource or create the member resource if it does not exist, with the representation in the request body.")
+    @DisplayName("Replaces all the representations of the member tarball resource or create the member resource if it does not exist, with the representation in the request body.")
     @Test
     @Order(10)
+    public void testMemberPutTarBallPackage()
+    {
+        String originalInput = "test input";
+        String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes());
+
+        given()
+         //       .multiPart("controlName2", "my_file_name.txt", MY_PACKAGE_BASE64)
+       // .multiPart(new File("/tmp/apa.txt"))
+                .body(encodedString)
+                .when().put("/v1/packages/1/tarball")
+                .then()
+                .statusCode(200);
+    }
+
+    @DisplayName("Replaces all the representations of the member name resource or create the member resource if it does not exist, with the representation in the request body.")
+    @Test
+    @Order(12)
     public void testMemberPutNamePackage()
     {
         given()
@@ -61,7 +85,7 @@ public class PackageApiTest
 
     @DisplayName("Replaces all the representations of the member resource or create the member resource if it does not exist, with the representation in the request body.")
     @Test
-    @Order(11)
+    @Order(13)
     public void testMemberGetNamePackage()
     {
         given()
@@ -74,7 +98,7 @@ public class PackageApiTest
 
     @DisplayName("Retrieves a representation of the member resource in the response body")
     @Test
-    @Order(12)
+    @Order(14)
     public void testMemberGetPackage()
     {
         given()
@@ -109,7 +133,6 @@ public class PackageApiTest
                 .body(is(""))
                 .statusCode(200);
     }
-
 
 
 }

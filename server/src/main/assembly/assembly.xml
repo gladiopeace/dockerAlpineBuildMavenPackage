@@ -19,6 +19,14 @@
                 <include>*.sh</include>
             </includes>
         </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/src/main/docker/aports</directory>
+            <includes>
+                <include>**</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 
 </assembly>
