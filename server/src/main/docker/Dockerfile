@@ -29,14 +29,12 @@ FROM alpine:3.12.0
 LABEL Description="This image is used to start a Restful serivice to create a Alpine package" Vendor="UH" Version="0.1"
 
 ARG JAVA_PACKAGE=openjdk11-jre-headless
-ARG RUN_JAVA_VERSION=1.3.8
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
 # Install java and the run-java script
 RUN apk add openjdk11-jre-headless \
     && apk update \
-    && apk add curl \
     && apk add vim \
     && apk add tree \
     && apk add busybox \
@@ -57,11 +55,10 @@ RUN mkdir -p /home/dev \
 RUN addgroup dev abuild
 
 # Runner
-RUN mkdir -p /usr/local/lib/alpine \
-    && chown dev /usr/local/lib/alpine\
-    && chmod "g+rwX" /usr/local/lib/alpine \
+COPY maven/src/main/docker/fabric8/run-java.sh /usr/local/lib/alpine/
+RUN chown dev /usr/local/lib/alpine\
+    && chmod "g+rwx" /usr/local/lib/alpine \
     && chown dev:root /usr/local/lib/alpine \
-    && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o /usr/local/lib/alpine/run-java.sh \
     && chown dev /usr/local/lib/alpine/run-java.sh \
     && chmod 540 /usr/local/lib/alpine/run-java.sh
 
@@ -92,4 +89,5 @@ WORKDIR /home/dev
 
 RUN abuild-keygen -n
 
+USER root
 ENTRYPOINT [ "/usr/local/lib/alpine/run-java.sh" ]
